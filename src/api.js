@@ -1,40 +1,95 @@
-import md5 from 'md5';
+import axios from 'axios';
 
-const API_URL = "https://api.valantis.store:41000/";
+const md5 = require('md5');
+const API_URL = "http://api.valantis.store:40000/";
+const API_SECURE_URL = "https://api.valantis.store:41000/";
 const PASSWORD = "Valantis";
 
-const generateAuthHeader = () => {
+const generateXAuth = () => {
     const timestamp = new Date().toISOString().split("T")[0].replace(/-/g, "");
     const authString = `${PASSWORD}_${timestamp}`;
-    return {
-        "X-Auth": md5(authString),
-    };
+     // Используйте ваш метод хеширования MD5
+    return md5(authString);
 };
 
-export const fetchData = async (action, params = {}) => {
+const makeApiRequest = async (endpoint, method, payload) => {
+    console.log('Endpoint:', endpoint);
+    console.log('Method:', method);
+    console.log('Payload:', payload);
+    const url = endpoint.startsWith("https") ? API_SECURE_URL : API_URL;
+    const headers = {
+        "Content-Type": "application/json",
+        "X-Auth": generateXAuth(),
+    };
+
     try {
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: {
-                ...generateAuthHeader(),
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ action, params }),
+        const response = await axios({
+            method: method,
+            url: url + endpoint,
+            headers: headers,
+            data: payload,
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+        if (response.status !== 200) {
+            throw new Error(`HTTP ошибка! Статус: ${response.status}`);
         }
 
-        const data = await response.json();
-        if (data.error) {
-            console.error("Ошибка API:", data.error);
-            throw new Error(`Ошибка API! ${data.error}`);
-        }
-
-        return data.result;
+        return response.data;
     } catch (error) {
-        console.error("Ошибка при получении данных:", error.message);
+        console.error("Ошибка запроса к API:", error.message);
         throw error;
     }
 };
+
+
+export const getIds = async (offset = 0, limit = 10) => {
+    const payload = {
+        action: "get_ids",
+        params: { offset, limit },
+    };
+    console.log("getIds")
+
+    return await makeApiRequest("", "POST", payload);
+};
+
+export const getItems = async (ids) => {
+    if (!ids || ids.length === 0) {
+        return null;
+    }
+    console.log("getItems")
+
+    const payload = {
+        action: "get_items",
+        params: { ids },
+    };
+
+    return await makeApiRequest("", "POST", payload);
+};
+
+const getFields = async (field, offset = 0, limit = 10) => {
+    const payload = {
+        action: "get_fields",
+        params: { field, offset, limit },
+    };
+
+    return await makeApiRequest("", "POST", payload);
+};
+
+export const filterItems = async (field, value) => {
+    const endpoint = ""; // Используйте правильный endpoint
+    const method = "POST";
+    console.log(field, value)
+    const payload = {
+        action: "filter",
+        params: { [field]: value }, // Преобразуйте строку в число
+    };
+
+    try {
+        return await makeApiRequest(endpoint, method, payload);
+    } catch (error) {
+        console.error("Error fetching filtered product IDs:", error.message);
+        throw error;
+    }
+};
+
+
