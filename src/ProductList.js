@@ -54,8 +54,18 @@ const ProductList = () => {
     useEffect(() => {
         const fetchProductDetails = async () => {
             try {
-                const result = await getItems(productIds);
-                setProductDetails(result.result);
+                const uniqueIdsSet = new Set(productIds); // Сохраните уникальные идентификаторы в Set
+                const uniqueIdsArray = Array.from(uniqueIdsSet); // Преобразуйте Set обратно в массив
+                const result = await getItems(uniqueIdsArray);
+
+                // Игнорируйте дубликаты по идентификатору, используя Map
+                const uniqueProductDetailsMap = new Map();
+                result.result.forEach((product) => {
+                    uniqueProductDetailsMap.set(product.id, product);
+                });
+
+                // Обновите productDetails массивом уникальных товаров
+                setProductDetails(Array.from(uniqueProductDetailsMap.values()));
             } catch (error) {
                 console.error("Error fetching product details:", error.message);
             }
@@ -64,13 +74,9 @@ const ProductList = () => {
         fetchProductDetails();
     }, [productIds]);
 
+
     const handleFilterChange = (field, value) => {
         setFilter({ field: field, value: value });
-    };
-
-
-    const handleSearchClick = () => {
-        fetchFilteredProductIds();
     };
 
     const handlePageChange = (newPage) => {
@@ -105,7 +111,6 @@ const ProductList = () => {
                     type="text"
                     onChange={(e) => handleFilterChange(filter.field, e.target.value)}
                 />
-                <button onClick={handleSearchClick}>Поиск</button>
             </div>
             <div>{renderProductList()}</div>
             <div>
