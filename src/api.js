@@ -12,7 +12,7 @@ const generateXAuth = () => {
 };
 
 const makeApiRequest = async (endpoint, method, payload) => {
-    const url = endpoint.startsWith("https") ? API_SECURE_URL : API_URL;
+    const url = API_SECURE_UR;
     const headers = {
         "Content-Type": "application/json",
         "X-Auth": generateXAuth(),
