@@ -49,6 +49,10 @@
 .btn:active{
     background-color: #92b1ce;
 }
+.loading{
+    font-family: sans-serif;
+    margin: 30px 20px;
+}
 .pages-div {
     margin: 20px 0 20px 10px;
 }
