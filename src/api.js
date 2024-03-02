@@ -8,14 +8,10 @@ const PASSWORD = "Valantis";
 const generateXAuth = () => {
     const timestamp = new Date().toISOString().split("T")[0].replace(/-/g, "");
     const authString = `${PASSWORD}_${timestamp}`;
-     // Используйте ваш метод хеширования MD5
     return md5(authString);
 };
 
 const makeApiRequest = async (endpoint, method, payload) => {
-    console.log('Endpoint:', endpoint);
-    console.log('Method:', method);
-    console.log('Payload:', payload);
     const url = endpoint.startsWith("https") ? API_SECURE_URL : API_URL;
     const headers = {
         "Content-Type": "application/json",
@@ -47,7 +43,6 @@ export const getIds = async (offset = 0, limit = 10) => {
         action: "get_ids",
         params: { offset, limit },
     };
-    console.log("getIds")
 
     return await makeApiRequest("", "POST", payload);
 };
@@ -56,7 +51,6 @@ export const getItems = async (ids) => {
     if (!ids || ids.length === 0) {
         return null;
     }
-    console.log("getItems")
 
     const payload = {
         action: "get_items",
@@ -76,12 +70,11 @@ const getFields = async (field, offset = 0, limit = 10) => {
 };
 
 export const filterItems = async (field, value) => {
-    const endpoint = ""; // Используйте правильный endpoint
+    const endpoint = "";
     const method = "POST";
-    console.log(field, value)
     const payload = {
         action: "filter",
-        params: { [field]: value }, // Преобразуйте строку в число
+        params: { [field]: value },
     };
 
     try {

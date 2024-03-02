@@ -1,0 +1,58 @@
+.title {
+    margin: 20px 0 20px 10px;
+    font-family: sans-serif;
+
+}
+.filter-div{
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0 20px 10px;
+    font-family: sans-serif;
+
+}
+.filter-title{
+    display: flex;
+    flex-direction: row;
+}
+.filter-title p{
+    margin: 0;
+    padding-top: 4px;
+    padding-right: 10px;
+}
+
+.filter-title select{
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px 0 0 5px;
+}
+.filter-div input{
+    margin-right: 10px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 0 5px 5px 0;
+}
+.btn{
+    height: 27px;
+    font-family: sans-serif;
+    padding: 1px 6px;
+    border: 1px solid rgb(173, 191, 208);
+    border-radius: 5px;
+    background-color: #cde1f3;
+}
+.btn:disabled{
+    background-color: #e5f2fd;
+    border: none;
+}
+.btn:hover{
+    background-color: #b0c9e0;
+}
+.btn:active{
+    background-color: #92b1ce;
+}
+.pages-div {
+    margin: 20px 0 20px 10px;
+}
+.pages-div span{
+    font-family: sans-serif;
+    margin:  0 10px 0 10px;
+}
